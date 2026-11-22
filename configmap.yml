@@ -10,8 +10,7 @@ data:
 
   Admin.ini: |
     [Moderators]
-    Moderator=${STEAMID}
-    Moderator=ExampleID2
+    ${ADMIN_LIST}
 
     [BannedPlayers]
     BannedPlayer=ExampleBanID1
