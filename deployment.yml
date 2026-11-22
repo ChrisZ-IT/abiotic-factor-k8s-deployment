@@ -33,7 +33,7 @@ spec:
       initContainers:
       - name: init-steamcmd
         image: docker.io/steamcmd/steamcmd:ubuntu
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         securityContext:
           runAsUser: 0
           runAsGroup: 0
@@ -45,7 +45,7 @@ spec:
       containers:
       - name: abiotic-factor-server
         image: docker.io/chriszit/abiotic-factor-server-base:1.0.0
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         securityContext:
           runAsUser: 1026
           runAsGroup: 10
