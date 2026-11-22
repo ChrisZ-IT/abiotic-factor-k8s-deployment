@@ -19,7 +19,7 @@ Note: To patch server just restart the pod.
       - review the events on the pod
 
   - Review pods app logs
-    - Review init container logs: `k logs -n abiotic-factor pods/abiotic-factor-66574f9b8c-tfj25 init-downloader --follow`
+    - Review init container logs: `k logs -n abiotic-factor pods/abiotic-factor-66574f9b8c-tfj25 init-steamcmd --follow`
       - is it having issues downloading the game files?
     - Review main container logs: `k logs -n abiotic-factor pods/abiotic-factor-66574f9b8c-tfj25 abiotic-factor-server --follow`
       - Is it having issues starting the server?
@@ -30,7 +30,7 @@ Note: To patch server just restart the pod.
 
   - Verify storage permissions:
     - If pod wont start or you are getting `permission denied` errors and you are using nfs as your persistent storage.
-      - validate 1026:100 has permissions to your nfs mounts. You may have to exec into the pod or set it from the storage side.
+      - validate 1026:100 has 755 permissions to your nfs mounts. You may have to exec into the pod or set it from the storage side.
 
   - Verify the service has an endpoint
     - `k describe svc -n abiotic-factor abiotic-factor-svc`
