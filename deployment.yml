@@ -24,6 +24,9 @@ spec:
         - name: abiotic-factor-gamefiles-volume
           persistentVolumeClaim:
             claimName: abiotic-factor-gamefiles-pvc
+        - name: abiotic-factor-saves-volume
+          persistentVolumeClaim:
+            claimName: abiotic-factor-saves-pvc
         - name: abiotic-factor-game-configs
           configMap:
             name: abiotic-factor-game-configs
@@ -38,14 +41,20 @@ spec:
           runAsUser: 0
           runAsGroup: 0
           runAsNonRoot: false
-        command: ['sh', '-c', 'steamcmd +@sSteamCmdForcePlatformType windows +force_install_dir /data +login anonymous +app_update 2857200 validate +quit && chown -R 1026:100 /data && chmod -R 775 /data']
+        env:
+          - name: INSTALL_PATH
+            value: /home/serviceuser/abiotic-factor-server
+        command: ['sh', '-c', 'steamcmd +@sSteamCmdForcePlatformType windows +force_install_dir $INSTALL_PATH +login anonymous +app_update 2857200 validate +quit && chown -R 1026:100 $INSTALL_PATH && chmod -R 775 $INSTALL_PATH']
         volumeMounts:
         - name: abiotic-factor-gamefiles-volume
-          mountPath: /data
+          mountPath: /home/serviceuser/abiotic-factor-server
+        - name: abiotic-factor-saves-volume
+          mountPath: /home/serviceuser/abiotic-factor-server/AbioticFactor/Saved
       containers:
       - name: abiotic-factor-server
-        image: docker.io/chriszit/abiotic-factor-server-base:1.0.0
+        image: docker.io/chriszit/abiotic-factor-server-base:1.0.1
         imagePullPolicy: Always
+        workingDir: /home/serviceuser/abiotic-factor-server
         securityContext:
           runAsUser: 1026
           runAsGroup: 10
@@ -83,7 +92,7 @@ spec:
           - 'sh'
           - '-c'
           - |
-            wine /data/AbioticFactor/Binaries/Win64/AbioticFactorServer-Win64-Shipping.exe \
+            wine AbioticFactor/Binaries/Win64/AbioticFactorServer-Win64-Shipping.exe \
               -SteamServerName="_DOLLAR_SERVER_NAME" \
               -MaxServerPlayers=_DOLLAR_PLAYER_COUNT \
               -WorldSaveName="_DOLLAR_SERVER_NAME" \
@@ -93,7 +102,9 @@ spec:
               -useperfthreads
         volumeMounts:
         - name: abiotic-factor-gamefiles-volume
-          mountPath: /data
+          mountPath: /home/serviceuser/abiotic-factor-server
+        - name: abiotic-factor-saves-volume
+          mountPath: /home/serviceuser/abiotic-factor-server/AbioticFactor/Saved
         - name: abiotic-factor-game-configs
-          mountPath: /data/AbioticFactor/Saved/SaveGames/Server/Admin.ini
+          mountPath: /home/serviceuser/abiotic-factor-server/AbioticFactor/Saved/SaveGames/Server/Admin.ini
           subPath: Admin.ini

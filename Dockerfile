@@ -11,4 +11,9 @@ EOF
 RUN useradd --no-log-init -u 1026 -g 100 -m -s /usr/sbin/nologin serviceuser
 
 USER serviceuser
-WORKDIR /data
+
+WORKDIR /home/serviceuser
+
+RUN chown -R 1026:100 /home/serviceuser
+
+USER 1026:100
