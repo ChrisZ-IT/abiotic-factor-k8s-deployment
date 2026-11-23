@@ -1,7 +1,9 @@
 FROM debian:stable-slim
+
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN <<EOF
+set -e
 apt-get update && apt-get upgrade -y
 apt-get install -y --no-install-recommends wine
 apt-get autoremove -y && apt-get autoclean
@@ -10,10 +12,6 @@ EOF
 
 RUN useradd --no-log-init -u 1026 -g 100 -m -s /usr/sbin/nologin serviceuser
 
-USER serviceuser
+USER 1026:100
 
 WORKDIR /home/serviceuser
-
-RUN chown -R 1026:100 /home/serviceuser
-
-USER 1026:100
